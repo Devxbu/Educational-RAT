@@ -1,85 +1,219 @@
-# Educational RAT (Remote Access Tool) Project
+# Educational RAT - Remote Administration Tool
 
-**DISCLAIMER:** This project is created for **EDUCATIONAL PURPOSES ONLY**. It is designed to demonstrate network programming, client-server architecture, and system interactions in Python. Using this tool without explicit permission on systems you don't own is illegal and unethical.
+A modular remote administration tool with a client-server architecture, providing various system administration capabilities over a network connection. This project is designed for educational purposes and authorized system administration only.
 
-## Project Overview
+**⚠️ IMPORTANT: This tool is for educational and authorized use only. Unauthorized access to computer systems is illegal.**
 
-This educational RAT project consists of three main components:
-1. `listener.py` - The command and control server
-2. `trojan.py` - The client component
-3. `server/` - Web server for file operations
+## ✨ Features
 
-## Features
+- **File Operations**: List, view, create, delete, and modify files and directories
+- **System Control**: Execute shell commands, take screenshots, capture webcam
+- **Network Operations**: Upload/download files and folders with progress tracking
+- **Modular Design**: Easy to extend with new commands and functionality
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Persistent Connections**: Maintains connection state and current directory per client
 
-- Remote command execution
-- File system operations (ls, cd, pwd, etc.)
-- Screenshot capture
-- Webcam capture
-- File upload/download capabilities
-- Directory operations
-- Self-destruction capability
-
-## Requirements
+## Project Structure
 
 ```
-pyautogui>=0.9.54
-opencv-python>=4.8.0
-requests>=2.31.0
-requests-toolbelt>=1.0.0
+RAT-4.0/
+├── commands/               # Command implementations
+│   ├── __init__.py
+│   ├── base_command.py     # Base command classes
+│   ├── file_commands.py    # File system commands
+│   ├── system_commands.py  # System control commands
+│   ├── network_commands.py # Network operations
+│   └── camera_commands.py  # Camera-related commands
+├── network/               # Network communication
+│   ├── __init__.py
+│   ├── server.py          # Server implementation
+│   └── client.py          # Client implementation
+├── utils/                 # Utility functions
+│   ├── __init__.py
+│   ├── constants.py       # Constants and configuration
+│   └── helpers.py         # Helper functions
+├── test_client.py         # Test client for development
+├── main.py               # Main entry point
+├── requirements.txt      # Python dependencies
+└── README.md            # This file
 ```
 
-## Setup & Usage
+## 🚀 Installation
 
-1. Install the required dependencies:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Devxbu/Educational-RAT.git
+   cd Educational-RAT
+   ```
+
+2. Create and activate a virtual environment (recommended):
+   ```bash
+   # On macOS/Linux
+   python3 -m venv venv
+   source venv/bin/activate
+
+   # On Windows
+   python -m venv venv
+   .\venv\Scripts\activate
+   ```
+
+3. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. Start the web server (for file operations):
-   ```bash
-   cd server
-   # Follow server setup instructions
+## 🔧 Configuration
+
+1. Edit `utils/constants.py` to configure default settings:
+   ```python
+   DEFAULT_HOST = '127.0.0.1'  # Default binding address
+   DEFAULT_PORT = 9999         # Default port
+   BUFFER_SIZE = 4096          # Network buffer size
    ```
 
-3. Run the listener:
-   ```bash
-   python listener.py
-   # Enter the desired port number when prompted
-   ```
+## 🖥️ Usage
 
-4. Run the client (in a test environment only):
-   ```bash
-   python trojan.py
-   ```
+### Starting the Server
 
-## Project Structure
+```bash
+python main.py [--host HOST] [--port PORT] [--debug]
+```
 
-- `listener.py`: The control server that accepts connections and sends commands
-- `trojan.py`: The client that executes commands and connects back to the listener
-- `server/`: Web server component for handling file operations
-- `requirements.txt`: Python package dependencies
+- `--host`: Host to bind to (default: 127.0.0.1)
+- `--port`: Port to listen on (default: 9999)
+- `--debug`: Enable debug output (useful for development)
 
-## Educational Value
+### 🧪 Using the Test Client
 
-This project demonstrates:
-- Socket programming in Python
-- Client-server architecture
-- File system operations
-- System command execution
-- HTTP requests and file transfers
-- Computer vision integration
-- Error handling and connection management
+The test client (`test_client.py`) is a command-line interface for interacting with the RAT server. It's designed for development and testing purposes.
 
-## Security Notice
+#### Basic Usage
 
-This tool is designed for educational purposes to understand:
-- Network security concepts
-- Remote system administration
-- Security vulnerabilities
-- Ethical hacking principles
+```bash
+# Connect to a server and execute a command
+python test_client.py <command> [args...]
 
-**DO NOT** use this tool on any system without explicit permission. Unauthorized use may be illegal and result in serious consequences.
+# Example: List files in the root directory
+python test_client.py ls /
 
-## Legal Disclaimer
+# Example: Change directory
+python test_client.py cd /path/to/directory
+```
 
-This project is provided for educational purposes only. The authors are not responsible for any misuse or damage caused by this program. Users are responsible for ensuring they comply with all applicable laws and regulations in their jurisdiction.
+#### File Operations
+
+```bash
+# Upload a file to the server
+python test_client.py upload /local/path/file.txt [remote_name.txt]
+
+# Download a file from the server
+python test_client.py download remote_file.txt [local_path]
+
+# Upload an entire folder (will be zipped)
+python test_client.py upload_folder /local/folder [remote_name.zip]
+```
+
+#### System Commands
+
+```bash
+# Execute a shell command
+python test_client.py exec "ls -la"
+
+# Take a screenshot
+python test_client.py screenshot [output.jpg]
+
+# Capture from webcam
+python test_client.py camera_capture [output.jpg]
+```
+
+#### Advanced Usage
+
+```bash
+# Connect to a custom host and port
+python test_client.py --host 192.168.1.100 --port 9999 ls /
+
+# Get help
+python test_client.py help
+
+# List all available commands
+python test_client.py list_commands
+```
+
+#### Command Line Options
+
+- `--host`: Server hostname or IP (default: 127.0.0.1)
+- `--port`: Server port (default: 9999)
+- `--debug`: Enable debug output
+
+### Available Commands
+
+Run `python test_client.py help` to see all available commands.
+
+### Available Commands
+
+#### File Operations
+- `ls [path]` - List directory contents
+- `cd <directory>` - Change directory
+- `mkdir <directory>` - Create a new directory
+- `rm <file/directory>` - Remove a file or directory
+- `cat <file>` - View file contents
+- `touch <file>` - Create an empty file
+- `unzip <archive> [destination]` - Extract a zip archive
+
+#### System Control
+- `exit` - Exit the application
+- `shutdown` - Shutdown the system
+- `screenshot` - Take a screenshot
+- `exec <command>` - Execute a shell command
+- `selfdestruct` - Remove all traces of the application
+
+#### Network Operations
+- `upload <local_path> [remote_name]` - Upload a file
+- `download <file_id> [save_path]` - Download a file
+- `upload_folder <local_folder> [remote_name]` - Upload a folder
+
+#### Camera
+- `camera_capture` - Capture an image from the webcam
+- `camera_stream [duration]` - Stream from the webcam (default: 10 seconds)
+
+## ⚠️ Security and Legal Notice
+
+**IMPORTANT:** This tool is designed **ONLY** for:
+- Educational purposes
+- Authorized system administration
+- Security research with explicit permission
+
+### Legal Requirements
+- You **MUST** have explicit permission to run this tool on any system
+- Unauthorized access to computer systems is illegal in most jurisdictions
+- The developers assume **NO** liability for misuse of this software
+
+### Security Best Practices
+- Always run the server on trusted networks only
+- Use strong authentication if exposing to untrusted networks
+- Regularly update the software to the latest version
+- Review the code before running in production environments
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📧 Contact
+
+For questions or concerns, please open an issue on the GitHub repository.
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by Bahri URANLI</sub>
+</div>
